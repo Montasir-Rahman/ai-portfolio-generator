@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenPort: AI Portfolio Generator</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom styles to enhance the UI */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* A light gray background */
+        }
+        
+        /* Custom focus ring color */
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #3b82f6; /* A nice blue focus ring */
+            border-color: #3b82f6;
+        }
+
+        /* Animation for the loader */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loader {
+            border: 4px solid rgba(0, 0, 0, .1);
+            border-left-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Styling for generated code block */
+        #generatedCode {
+            background-color: #1f2937; /* Dark background for code */
+            color: #d1d5db; /* Light text for code */
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">GenPort</h1>
+            <p class="text-lg sm:text-xl text-gray-600 mt-2">Generate Your Professional Portfolio in Minutes</p>
+        </header>
+
+        <!-- Main Form -->
+        <main id="generatorFormContainer" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+            <form id="portfolioForm">
+                <div class="space-y-8">
+                    
+                    <!-- Personal Information Section -->
+                    <section>
+                        <h2 class="text-2xl font-semibold border-b pb-3 mb-6 text-gray-800">Personal Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g., Jane Doe">
+                            </div>
+                            <div>
+                                <label for="tagline" class="block text-sm font-medium text-gray-700 mb-1">Professional Tagline</label>
+                                <input type="text" id="tagline" name="tagline" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g., Full-Stack Web Developer">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label for="about" class="block text-sm font-medium text-gray-700 mb-1">About Me</label>
+                            <textarea id="about" name="about" rows="4" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="Tell us something about yourself..."></textarea>
+                        </div>
+                    </section>
+
+                    <!-- Contact & Socials Section -->
+                    <section>
+                        <h2 class="text-2xl font-semibold border-b pb-3 mb-6 text-gray-800">Contact & Socials</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="you@example.com">
+                            </div>
+                            <div>
+                                <label for="linkedin" class="block text-sm font-medium text-gray-700 mb-1">LinkedIn Profile URL</label>
+                                <input type="url" id="linkedin" name="linkedin" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="https://linkedin.com/in/yourprofile">
+                            </div>
+                            <div>
+                                <label for="github" class="block text-sm font-medium text-gray-700 mb-1">GitHub Profile URL</label>
+                                <input type="url" id="github" name="github" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="https://github.com/yourusername">
+                            </div>
+                            <div>
+                                <label for="twitter" class="block text-sm font-medium text-gray-700 mb-1">Twitter (X) Profile URL</label>
+                                <input type="url" id="twitter" name="twitter" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="https://twitter.com/yourusername">
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Skills Section -->
+                    <section>
+                        <h2 class="text-2xl font-semibold border-b pb-3 mb-6 text-gray-800">Skills</h2>
+                        <div>
+                            <label for="skills" class="block text-sm font-medium text-gray-700 mb-1">List Your Skills</label>
+                            <input type="text" id="skills" name="skills" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g., HTML, CSS, JavaScript, React, Node.js">
+                            <p class="text-xs text-gray-500 mt-1">Separate skills with a comma.</p>
+                        </div>
+                    </section>
+
+                    <!-- Projects Section -->
+                    <section>
+                        <div class="flex justify-between items-center border-b pb-3 mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-800">Projects</h2>
+                            <button type="button" id="addProjectBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">Add Project</button>
+                        </div>
+                        <div id="projectsContainer" class="space-y-6">
+                            <!-- Project fields will be added here dynamically -->
+                        </div>
+                    </section>
+
+                    <!-- Submit Button -->
+                    <div class="text-center pt-4">
+                        <button type="submit" id="submitBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-12 rounded-lg shadow-xl text-lg transition-transform transform hover:scale-105">
+                            Generate My Portfolio
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </main>
+        
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden text-center my-10">
+            <div class="loader w-12 h-12 rounded-full inline-block"></div>
+            <p class="text-lg font-medium text-gray-700 mt-4">Generating your portfolio... Please wait a moment.</p>
+        </div>
+
+        <!-- Result Display Section -->
+        <section id="resultContainer" class="hidden mt-10">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Your Portfolio is Ready!</h2>
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold">Generated HTML Code</h3>
+                    <button id="copyCodeBtn" class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">Copy Code</button>
+                </div>
+                <textarea id="generatedCode" readonly class="w-full h-96 p-4 border border-gray-300 rounded-lg shadow-sm resize-none"></textarea>
+                <div id="copyFeedback" class="text-green-600 font-medium mt-2 text-right hidden">Copied to clipboard!</div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const portfolioForm = document.getElementById('portfolioForm');
+            const addProjectBtn = document.getElementById('addProjectBtn');
+            const projectsContainer = document.getElementById('projectsContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultContainer = document.getElementById('resultContainer');
+            const generatedCode = document.getElementById('generatedCode');
+            const copyCodeBtn = document.getElementById('copyCodeBtn');
+            const copyFeedback = document.getElementById('copyFeedback');
+            const generatorFormContainer = document.getElementById('generatorFormContainer');
+
+            let projectCount = 0;
+
+            const addProject = () => {
+                projectCount++;
+                const projectDiv = document.createElement('div');
+                projectDiv.className = 'p-4 border border-gray-200 rounded-lg bg-gray-50 relative';
+                projectDiv.innerHTML = `
+                    <h3 class="font-semibold text-lg mb-4">Project ${projectCount}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="projectTitle${projectCount}" class="block text-sm font-medium text-gray-700 mb-1">Project Title</label>
+                            <input type="text" id="projectTitle${projectCount}" name="projectTitle" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" placeholder="e.g., My Awesome App">
+                        </div>
+                        <div>
+                            <label for="projectLink${projectCount}" class="block text-sm font-medium text-gray-700 mb-1">Project Link</label>
+                            <input type="url" id="projectLink${projectCount}" name="projectLink" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://example.com">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="projectDescription${projectCount}" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea id="projectDescription${projectCount}" name="projectDescription" rows="3" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" placeholder="A short description of your project..."></textarea>
+                    </div>
+                    <button type="button" class="remove-project-btn absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xl">&times;</button>
+                `;
+                projectsContainer.appendChild(projectDiv);
+
+                projectDiv.querySelector('.remove-project-btn').addEventListener('click', () => {
+                    projectDiv.remove();
+                });
+            };
+            
+            addProject();
+            addProjectBtn.addEventListener('click', addProject);
+
+            portfolioForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                generatorFormContainer.classList.add('hidden');
+                loadingIndicator.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+
+                const formData = new FormData(portfolioForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const projects = [];
+                const projectTitles = formData.getAll('projectTitle');
+                const projectLinks = formData.getAll('projectLink');
+                const projectDescriptions = formData.getAll('projectDescription');
+
+                for (let i = 0; i < projectTitles.length; i++) {
+                    if (projectTitles[i]) {
+                        projects.push({
+                            title: projectTitles[i],
+                            link: projectLinks[i],
+                            description: projectDescriptions[i]
+                        });
+                    }
+                }
+                
+                // ** ENHANCED PROMPT FOR MODERN DESIGN **
+                const prompt = `
+                    Please generate a complete, single-file HTML for a personal portfolio website with a very modern, sleek, and professional design.
+
+                    **Design & Style Instructions (CRITICAL):**
+                    1.  **Theme:** Use a sophisticated dark mode theme. The background should be a very dark gray (like #111827) with a vibrant accent color (like a bright blue, teal, or purple) for links, buttons, and highlights.
+                    2.  **Typography:** Use the 'Inter' font from Google Fonts. Establish a clear visual hierarchy with font sizes and weights. Body text should be a light gray for readability against the dark background.
+                    3.  **Layout:** The layout must be fully responsive, clean, and spacious. Use generous whitespace.
+                    4.  **Animations:** Incorporate subtle, professional animations. For example, fade-in-on-scroll effects for sections, and smooth transitions on hover for buttons and project cards.
+                    5.  **Modern Elements:** Consider using modern CSS effects like glassmorphism (frosted glass look) or neumorphism for cards or containers to give a sleek, tactile feel.
+                    6.  **Structure:** Generate a single HTML file. All CSS must be included using Tailwind CSS classes directly in the HTML elements. Do not use a <style> tag or external CSS files.
+                    7.  **Icons:** For social links (LinkedIn, GitHub, etc.), please use inline SVG icons. They should be simple, clean line icons.
+
+                    **User's Portfolio Data:**
+                    - **Full Name:** ${data.fullName || 'Not Provided'}
+                    - **Tagline:** ${data.tagline || 'Not Provided'}
+                    - **About Me:** ${data.about || 'Not Provided'}
+                    - **Contact Email:** ${data.email || 'Not Provided'}
+                    - **Social Links:**
+                        - LinkedIn: ${data.linkedin || 'Not Provided'}
+                        - GitHub: ${data.github || 'Not Provided'}
+                        - Twitter/X: ${data.twitter || 'Not Provided'}
+                    - **Skills:** ${data.skills ? data.skills.split(',').map(s => s.trim()).join(', ') : 'Not Provided'}
+                    - **Projects:**
+                        ${projects.length > 0 ? projects.map(p => `
+                        - Project Title: ${p.title}
+                          - Project Link: ${p.link || 'Not Provided'}
+                          - Project Description: ${p.description || 'Not Provided'}
+                        `).join('') : 'No projects listed.'}
+                    
+                    Now, generate the HTML code based on these instructions and data. The final output must ONLY be the raw HTML code, starting with <!DOCTYPE html> and ending with </html>.
+                `;
+
+                try {
+                    // ** MODIFIED API CALL FOR VERCEL **
+                    // This now calls our own serverless function, not Google's API directly.
+                    const response = await fetch('/api/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: prompt }) // Send the prompt in the request body
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `API Error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    let htmlContent = result.html;
+                    
+                    generatedCode.value = htmlContent;
+                    resultContainer.classList.remove('hidden');
+
+                } catch (error) {
+                    console.error("Error generating portfolio:", error);
+                    generatedCode.value = `An error occurred while generating your portfolio.\n\nError: ${error.message}`;
+                    resultContainer.classList.remove('hidden');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
+            });
+
+            copyCodeBtn.addEventListener('click', () => {
+                generatedCode.select();
+                document.execCommand('copy');
+                copyFeedback.classList.remove('hidden');
+                setTimeout(() => {
+                    copyFeedback.classList.add('hidden');
+                }, 2000);
+            });
+        });
+    </script>
+
+</body>
+</html>
