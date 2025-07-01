@@ -259,11 +259,11 @@
             addProject();
             addProjectBtn.addEventListener('click', addProject);
 
-            // Function to convert a file to a Base64 string
-            const toBase64 = file => new Promise((resolve, reject) => {
+            // Function to convert a file to a Base64 data URL
+            const fileToDataUrl = file => new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]); // Get only the base64 part
+                reader.onload = () => resolve(reader.result);
                 reader.onerror = error => reject(error);
             });
 
@@ -277,12 +277,9 @@
                 const formData = new FormData(portfolioForm);
                 const data = Object.fromEntries(formData.entries());
 
-                // Handle file uploads
-                let imageBase64 = null;
+                // Check if files were uploaded
                 const imageFile = data.userImage;
-                if (imageFile && imageFile.size > 0) {
-                    imageBase64 = await toBase64(imageFile);
-                }
+                const hasImage = imageFile && imageFile.size > 0;
                 
                 const cvFile = data.userCV;
                 const hasCV = cvFile && cvFile.size > 0;
@@ -302,7 +299,7 @@
                     }
                 }
                 
-                // ** UPDATED PROMPT FOR IMAGE AND CV **
+                // ** UPDATED PROMPT TO USE A PLACEHOLDER **
                 const prompt = `
                     Please generate a complete, single-file HTML for a personal portfolio website with a very modern, sleek, and professional design.
 
@@ -318,7 +315,7 @@
                     **User's Portfolio Data:**
                     - **Full Name:** ${data.fullName || 'Not Provided'}
                     - **Tagline:** ${data.tagline || 'Not Provided'}
-                    - **User Image:** ${imageBase64 ? `Include this Base64 image: data:image/jpeg;base64,${imageBase64}` : 'No image provided. Do not include an img tag for the user photo.'}
+                    - **User Image:** ${hasImage ? 'User has provided an image. In the generated HTML, use exactly src="IMAGE_PLACEHOLDER" for the user photo.' : 'No image provided. Do not include an img tag for the user photo.'}
                     - **CV/Resume:** ${hasCV ? 'User has provided a CV. Include a "Download CV" button. The button\'s link should be href="#" as a placeholder.' : 'No CV provided. Do not include a "Download CV" button.'}
                     - **About Me:** ${data.about || 'Not Provided'}
                     - **Contact Email:** ${data.email || 'Not Provided'}
@@ -350,8 +347,16 @@
                     }
 
                     const result = await response.json();
+                    let htmlContent = result.html;
+
+                    // ** NEW LOGIC: INJECT IMAGE DATA AFTER GENERATION **
+                    if (hasImage) {
+                        const imageDataUrl = await fileToDataUrl(imageFile);
+                        // Use a regular expression to replace all instances of the placeholder
+                        htmlContent = htmlContent.replace(/src="IMAGE_PLACEHOLDER"/g, `src="${imageDataUrl}"`);
+                    }
                     
-                    generatedCode.value = result.html;
+                    generatedCode.value = htmlContent;
                     resultContainer.classList.remove('hidden');
 
                 } catch (error) {
