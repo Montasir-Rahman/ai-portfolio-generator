@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    
     <style>
         /* Custom styles to enhance the UI */
         body {
@@ -43,6 +43,20 @@
             color: #d1d5db; /* Light text for code */
             font-family: monospace;
         }
+
+        /* Style for file input */
+        input[type="file"]::file-selector-button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #4338ca;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -71,6 +85,16 @@
                             <div>
                                 <label for="tagline" class="block text-sm font-medium text-gray-700 mb-1">Professional Tagline</label>
                                 <input type="text" id="tagline" name="tagline" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g., Full-Stack Web Developer">
+                            </div>
+                            <div>
+                                <label for="userImage" class="block text-sm font-medium text-gray-700 mb-1">Your Photo</label>
+                                <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+                                <p class="text-xs text-gray-500 mt-1">PNG or JPG. Recommended 500x500px.</p>
+                            </div>
+                            <div>
+                                <label for="userCV" class="block text-sm font-medium text-gray-700 mb-1">Your CV/Resume</label>
+                                <input type="file" id="userCV" name="userCV" accept=".pdf,.doc,.docx" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+                                <p class="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX file.</p>
                             </div>
                         </div>
                         <div class="mt-6">
@@ -136,7 +160,7 @@
         <!-- Loading Indicator -->
         <div id="loadingIndicator" class="hidden text-center my-10">
             <div class="loader w-12 h-12 rounded-full inline-block"></div>
-            <p class="text-lg font-medium text-gray-700 mt-4">Generating your portfolio... Please wait a moment.</p>
+            <p class="text-lg font-medium text-gray-700 mt-4">Generating your portfolio... This might take a moment.</p>
         </div>
 
         <!-- Result Display Section -->
@@ -149,6 +173,40 @@
                 </div>
                 <textarea id="generatedCode" readonly class="w-full h-96 p-4 border border-gray-300 rounded-lg shadow-sm resize-none"></textarea>
                 <div id="copyFeedback" class="text-green-600 font-medium mt-2 text-right hidden">Copied to clipboard!</div>
+            </div>
+            
+            <!-- Deployment Guide Section -->
+            <div id="deploymentGuide" class="mt-12 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold text-center text-gray-900 mb-6">How to Deploy Your New Website (in 3 Steps)</h3>
+                <div class="space-y-8">
+                    <!-- Step 1: Upload CV and Update Link -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white text-xl font-bold rounded-full flex items-center justify-center">1</div>
+                        <div>
+                            <h4 class="text-lg font-semibold">Upload Your CV & Update the Link</h4>
+                            <p class="text-gray-600 mt-1">If you included a CV, upload the file to a cloud service like Google Drive or Dropbox. Get a shareable link and replace the `href="#"` for the "Download CV" button in the generated HTML with your public link.</p>
+                            <img src="https://placehold.co/600x200/e9d5ff/4c1d95?text=Example:+Find+href%3D%22%23%22+and+replace+it" alt="Code snippet showing where to replace CV link" class="mt-3 rounded-lg shadow-md border">
+                        </div>
+                    </div>
+                    <!-- Step 2: Push to GitHub -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white text-xl font-bold rounded-full flex items-center justify-center">2</div>
+                        <div>
+                            <h4 class="text-lg font-semibold">Save as `index.html` & Push to GitHub</h4>
+                            <p class="text-gray-600 mt-1">Save the generated code into a file named exactly `index.html`. Create a new repository on GitHub and upload this single file to it.</p>
+                            <img src="https://placehold.co/600x250/e0f2fe/0891b2?text=1.+Save+code+as+index.html%0A2.+Create+GitHub+Repo%0A3.+Upload+the+file" alt="Diagram showing saving file and uploading to GitHub" class="mt-3 rounded-lg shadow-md border">
+                        </div>
+                    </div>
+                    <!-- Step 3: Deploy on Vercel -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white text-xl font-bold rounded-full flex items-center justify-center">3</div>
+                        <div>
+                            <h4 class="text-lg font-semibold">Deploy with Vercel</h4>
+                            <p class="text-gray-600 mt-1">Log in to Vercel with your GitHub account. Import your new GitHub repository. Vercel will automatically detect it and you can deploy it with a single click. No configuration needed!</p>
+                            <img src="https://placehold.co/600x250/dcfce7/15803d?text=1.+Login+to+Vercel%0A2.+Import+GitHub+Repo%0A3.+Click+Deploy!" alt="Vercel deployment process" class="mt-3 rounded-lg shadow-md border">
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -201,6 +259,14 @@
             addProject();
             addProjectBtn.addEventListener('click', addProject);
 
+            // Function to convert a file to a Base64 string
+            const toBase64 = file => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]); // Get only the base64 part
+                reader.onerror = error => reject(error);
+            });
+
             portfolioForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -210,6 +276,16 @@
 
                 const formData = new FormData(portfolioForm);
                 const data = Object.fromEntries(formData.entries());
+
+                // Handle file uploads
+                let imageBase64 = null;
+                const imageFile = data.userImage;
+                if (imageFile && imageFile.size > 0) {
+                    imageBase64 = await toBase64(imageFile);
+                }
+                
+                const cvFile = data.userCV;
+                const hasCV = cvFile && cvFile.size > 0;
 
                 const projects = [];
                 const projectTitles = formData.getAll('projectTitle');
@@ -226,22 +302,24 @@
                     }
                 }
                 
-                // ** ENHANCED PROMPT FOR MODERN DESIGN **
+                // ** UPDATED PROMPT FOR IMAGE AND CV **
                 const prompt = `
                     Please generate a complete, single-file HTML for a personal portfolio website with a very modern, sleek, and professional design.
 
                     **Design & Style Instructions (CRITICAL):**
-                    1.  **Theme:** Use a sophisticated dark mode theme. The background should be a very dark gray (like #111827) with a vibrant accent color (like a bright blue, teal, or purple) for links, buttons, and highlights.
-                    2.  **Typography:** Use the 'Inter' font from Google Fonts. Establish a clear visual hierarchy with font sizes and weights. Body text should be a light gray for readability against the dark background.
-                    3.  **Layout:** The layout must be fully responsive, clean, and spacious. Use generous whitespace.
-                    4.  **Animations:** Incorporate subtle, professional animations. For example, fade-in-on-scroll effects for sections, and smooth transitions on hover for buttons and project cards.
-                    5.  **Modern Elements:** Consider using modern CSS effects like glassmorphism (frosted glass look) or neumorphism for cards or containers to give a sleek, tactile feel.
-                    6.  **Structure:** Generate a single HTML file. All CSS must be included using Tailwind CSS classes directly in the HTML elements. Do not use a <style> tag or external CSS files.
-                    7.  **Icons:** For social links (LinkedIn, GitHub, etc.), please use inline SVG icons. They should be simple, clean line icons.
+                    1.  **Theme:** Use a sophisticated dark mode theme. Background: #111827. Accent color: a bright teal or blue.
+                    2.  **Typography:** Use the 'Inter' font. Establish a clear visual hierarchy.
+                    3.  **Layout:** Fully responsive, clean, and spacious. Use generous whitespace.
+                    4.  **Animations:** Incorporate subtle, professional animations (e.g., fade-in-on-scroll, smooth hover transitions).
+                    5.  **Modern Elements:** Use modern CSS effects like glassmorphism or neumorphism for cards.
+                    6.  **Structure:** Generate a single HTML file with all CSS as Tailwind classes. Do NOT use <style> tags.
+                    7.  **Icons:** Use inline SVG icons for social links.
 
                     **User's Portfolio Data:**
                     - **Full Name:** ${data.fullName || 'Not Provided'}
                     - **Tagline:** ${data.tagline || 'Not Provided'}
+                    - **User Image:** ${imageBase64 ? `Include this Base64 image: data:image/jpeg;base64,${imageBase64}` : 'No image provided. Do not include an img tag for the user photo.'}
+                    - **CV/Resume:** ${hasCV ? 'User has provided a CV. Include a "Download CV" button. The button\'s link should be href="#" as a placeholder.' : 'No CV provided. Do not include a "Download CV" button.'}
                     - **About Me:** ${data.about || 'Not Provided'}
                     - **Contact Email:** ${data.email || 'Not Provided'}
                     - **Social Links:**
@@ -260,12 +338,10 @@
                 `;
 
                 try {
-                    // ** MODIFIED API CALL FOR VERCEL **
-                    // This now calls our own serverless function, not Google's API directly.
                     const response = await fetch('/api/generate', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: prompt }) // Send the prompt in the request body
+                        body: JSON.stringify({ prompt: prompt })
                     });
 
                     if (!response.ok) {
@@ -275,9 +351,7 @@
 
                     const result = await response.json();
                     
-                    let htmlContent = result.html;
-                    
-                    generatedCode.value = htmlContent;
+                    generatedCode.value = result.html;
                     resultContainer.classList.remove('hidden');
 
                 } catch (error) {
